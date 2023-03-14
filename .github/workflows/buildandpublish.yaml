@@ -1,0 +1,31 @@
+name: Build and Publish NPM-Packages
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          registry-url: "https://npm.pkg.github.com/"
+          scope: "@apimap"
+          always-auth: true
+      - run: |
+          echo "@apimap:registry = https://npm.pkg.github.com/apimap" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
+          echo "//npm.pkg.github.com/:always-auth=true" >> .npmrc
+      - run: |
+          packages=($(ls -d packages/*))
+          for i in "${packages[@]}"
+          do
+              echo "Build and Publish $i"
+              npm --prefix=$i/ install
+              npm --prefix=$i/ run build
+              npm publish $i/ || true
+          done
+        shell: bash
