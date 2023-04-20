@@ -7,6 +7,7 @@
 import Vue from 'vue';
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import { v4 as uuid } from 'uuid';
 
 const LOCAL_STORAGE_STATE_KEY = "oauth2state"
 
@@ -83,7 +84,11 @@ export const handleOAuth = ({
                     },
                 })
 
-                const tokenResponse = await client.get(`/oauth2/access_token?code=${code}&provider=${provider}`, {})
+                const tokenResponse = await client.get(`/oauth2/access_token?code=${code}&provider=${provider}`, {
+                    headers:{
+                        "X-Request-Id": uuid()
+                    }
+                })
                     .then(response => response.data)
                     .catch(error => {
                         onFailure(error);

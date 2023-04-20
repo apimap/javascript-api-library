@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 import axios from "axios";
+import { v4 as uuid } from 'uuid';
 
 export const DEFAULT_HOST = undefined;
 
@@ -29,6 +30,7 @@ export default function jsonClient(sso, api, token){
 
     client.interceptors.request.use(function (config) {
         config.headers.Authorization = "Bearer " + token;
+        config.headers['X-Request-Id'] = uuid();
         return config;
     });
 
