@@ -1,6 +1,6 @@
 {
   "name": "@apimap/rest-client",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "dist/rest-client.common.js",
   "license": "Apache-2.0",
   "scripts": {
